@@ -7,6 +7,11 @@
         b-card.mt-3
           b-card-text LINE Bot ID: @442fzklh
           img.qrcode(src="/img/442fzklh.png")
+          p say: Hello
+          p bot: Hello
+
+          p say: >> other word <<
+          p bot: Delay 10s for send noti
     .row.mt-3
       .col-12
         label server/controllers/DOSCG.js
@@ -21,9 +26,7 @@ export default {
     return {
       ans: null
     };
-  },
-
-  mounted() {}
+  }
 };
 </script>
 

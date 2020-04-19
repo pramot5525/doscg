@@ -1,9 +1,16 @@
 const axios = require("axios");
+const NodeCache = require("node-cache");
+const myCache = new NodeCache();
 
 // X, Y, 5, 9, 15, 23, Z - Please create a new function for finding X, Y, Z value
 const findXYZ = (req, res) => {
   const arr = ["X", "Y", 5, 9, 15, 23, "Z"];
   const ans = arr.slice(0);
+
+  const data = myCache.get("findXYZ");
+  if (data) {
+    return res.send({ arr, ans: JSON.parse(data) });
+  }
 
   ans.reverse().forEach((num, i) => {
     if (isNaN(num)) {
@@ -19,11 +26,17 @@ const findXYZ = (req, res) => {
     }
   });
   ans.reverse();
+  // set cache ans
+  myCache.set("findXYZ", JSON.stringify(ans));
   res.send({ arr, ans: ans });
 };
 
 // If A = 21, A + B = 23, A + C = -21 - Please create a new function for finding B and C value
 const findBC = (req, res) => {
+  const data = myCache.get("solveEquation");
+  if (data) {
+    return res.send({ ...JSON.parse(data) });
+  }
   const variable = {
     A: null,
     B: null,
@@ -67,24 +80,33 @@ const findBC = (req, res) => {
   let ansA = solveEquation("A = 21", "A");
   let ansB = solveEquation("A + B = 23", "B");
   let ansC = solveEquation("A + C = -21 ", "C");
-
-  res.send([
+  let answers = [
     { equation: "A + B = 23", answer: ansB },
     {
       equation: "A + C = -21 ",
       answer: ansC
     }
-  ]);
+  ];
+  // set cache ans
+  myCache.set("solveEquation", JSON.stringify(answers));
+  res.send(answers);
 };
 
 // Please use “Google API” for finding the best way to go to Central World from SCG Bangsue
 const connectGoogleAPI = async (req, res) => {
+  const data = myCache.get("connectGoogleAPI");
+  if (data) {
+    return res.json(JSON.parse(data));
+  }
   const googleAPIKey = process.env.GOOGLE_API;
   const scg = "13.80615,100.5353643";
   const central = "13.746787,100.5372003";
   const resMap = await axios.get(
     `https://maps.googleapis.com/maps/api/directions/json?origin=${scg}&destination=${central}&alternatives=true&key=${googleAPIKey}`
   );
+
+  // set cache
+  myCache.set("connectGoogleAPI", JSON.stringify(resMap.data));
   res.json(resMap.data);
 };
 
