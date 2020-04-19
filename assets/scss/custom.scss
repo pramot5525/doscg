@@ -1,0 +1,22 @@
+@import "./_variables";
+
+$theme-colors: (
+  "primary": $color-primary
+);
+$btn-focus-box-shadow: none !important;
+$grid-gutter-width: 40px !default;
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+body {
+  font-family: "Prompt", sans-serif;
+  color: #292929;
+}
+
+h1 {
+  font-weight: bold;
+}
+
+// label {
+//   font-weight: 200;
+// }
