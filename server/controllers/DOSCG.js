@@ -96,7 +96,7 @@ const findBC = (req, res) => {
 const connectGoogleAPI = async (req, res) => {
   // return cache
   //   .get("connectGoogleAPI", async () => {
-  const googleAPIKey = "AIzaSyCd823pjQsusR9Sph7FV1D-H_HVJpqQbGI";
+  const googleAPIKey = process.env.GOOGLE_API;
   const scg = "13.80615,100.5353643";
   const central = "13.746787,100.5372003";
   const resMap = await axios.get(
@@ -108,6 +108,13 @@ const connectGoogleAPI = async (req, res) => {
   // .then(result => {
   //   return result;
   // });
+};
+
+const lineMessageAPI = (req, res) => {
+  const config = {
+    channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
+    channelSecret: process.env.CHANNEL_SECRET
+  };
 };
 
 module.exports = { findXYZ, findBC, connectGoogleAPI };
