@@ -14,7 +14,7 @@ export default {
   },
 
   mounted() {
-    this.$axios.$get("/api/xyz").then(res => {
+    this.$axios.$get("/api/googleAPI").then(res => {
       this.ans = res;
     });
   }

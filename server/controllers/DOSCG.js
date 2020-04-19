@@ -96,6 +96,9 @@ const findBC = (req, res) => {
 const connectGoogleAPI = async (req, res) => {
   // return cache
   //   .get("connectGoogleAPI", async () => {
+  console.log(process.env.GOOGLE_API);
+  res.json({ test: "124", env: process.env.GOOGLE_API });
+  return;
   const googleAPIKey = process.env.GOOGLE_API;
   const scg = "13.80615,100.5353643";
   const central = "13.746787,100.5372003";
