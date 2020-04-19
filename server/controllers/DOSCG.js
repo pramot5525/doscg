@@ -1,8 +1,5 @@
 const axios = require("axios");
 
-const NodeCache = require("node-cache");
-const myCache = new NodeCache({ stdTTL: 100 });
-
 // X, Y, 5, 9, 15, 23, Z - Please create a new function for finding X, Y, Z value
 const findXYZ = (req, res) => {
   const arr = ["X", "Y", 5, 9, 15, 23, "Z"];
@@ -27,7 +24,6 @@ const findXYZ = (req, res) => {
 
 // If A = 21, A + B = 23, A + C = -21 - Please create a new function for finding B and C value
 const findBC = (req, res) => {
-  // return cache.get("findBC", () => {
   const variable = {
     A: null,
     B: null,
@@ -79,14 +75,10 @@ const findBC = (req, res) => {
       answer: ansC
     }
   ]);
-  // });
 };
 
 // Please use “Google API” for finding the best way to go to Central World from SCG Bangsue
 const connectGoogleAPI = async (req, res) => {
-  // return cache
-  //   .get("connectGoogleAPI", async () => {
-
   const googleAPIKey = process.env.GOOGLE_API;
   const scg = "13.80615,100.5353643";
   const central = "13.746787,100.5372003";
@@ -94,17 +86,65 @@ const connectGoogleAPI = async (req, res) => {
     `https://maps.googleapis.com/maps/api/directions/json?origin=${scg}&destination=${central}&alternatives=true&key=${googleAPIKey}`
   );
   res.json(resMap.data);
-  // })
-  // .then(result => {
-  //   return result;
-  // });
 };
 
-const lineMessageAPI = (req, res) => {
+const reply = (messages, token) => {
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${config.channelAccessToken}`
+  };
+
+  const data = { replyToken: token, messages };
+
+  axios({
+    url: "https://api.line.me/v2/bot/message/reply",
+    method: "POST",
+    headers,
+    data
+  });
+};
+
+const lineMessageAPI = async (req, res) => {
   const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
     channelSecret: process.env.CHANNEL_SECRET
   };
+
+  const { replyToken, message } = req.body.events[0];
+  if (`${message.text}`.toLocaleLowerCase() === "hello") {
+    const replyMessages = [
+      {
+        type: "text",
+        text: "Hello"
+      }
+    ];
+    reply(replyMessages, replyToken);
+  } else {
+    const replyMessages = [
+      {
+        type: "text",
+        text: "Delay 10s for send noti"
+      }
+    ];
+    setTimeout(() => reply(replyMessages, replyToken), 10000);
+  }
+  res.sendStatus(200);
+
+  function reply(messages, token) {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${config.channelAccessToken}`
+    };
+
+    const data = { replyToken: token, messages };
+
+    axios({
+      url: "https://api.line.me/v2/bot/message/reply",
+      method: "POST",
+      headers,
+      data
+    });
+  }
 };
 
 module.exports = { findXYZ, findBC, connectGoogleAPI, lineMessageAPI };
