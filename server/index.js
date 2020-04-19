@@ -24,7 +24,9 @@ async function start() {
   // JSON Parser
   app.use(express.json());
   app.get("/api/xyz", doSCGController.findXYZ);
+  app.get("/api/findBC", doSCGController.findBC);
   app.get("/api/googleAPI", doSCGController.connectGoogleAPI);
+  app.get("/api/lineMessageAPI", doSCGController.lineMessageAPI);
 
   // Give nuxt middleware to express
   app.use(nuxt.render);

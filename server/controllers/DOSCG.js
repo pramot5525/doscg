@@ -5,12 +5,6 @@ const myCache = new NodeCache({ stdTTL: 100 });
 
 // X, Y, 5, 9, 15, 23, Z - Please create a new function for finding X, Y, Z value
 const findXYZ = (req, res) => {
-  // if (myCache.has("myKey")) {
-  //   return myCache.get("myKey");
-  // } else {
-  //   return myCache.set(
-  //     "findXYZ",
-  //     () => {
   const arr = ["X", "Y", 5, 9, 15, 23, "Z"];
   const ans = arr.slice(0);
 
@@ -29,10 +23,6 @@ const findXYZ = (req, res) => {
   });
   ans.reverse();
   res.send({ arr, ans: ans });
-  //     },
-  //     1000
-  //   );
-  // }
 };
 
 // If A = 21, A + B = 23, A + C = -21 - Please create a new function for finding B and C value
@@ -83,10 +73,10 @@ const findBC = (req, res) => {
   let ansC = solveEquation("A + C = -21 ", "C");
 
   res.send([
-    { q: "A + B = 23", ans: ansB },
+    { equation: "A + B = 23", answer: ansB },
     {
-      q: "A + C = -21 ",
-      ans: ansC
+      equation: "A + C = -21 ",
+      answer: ansC
     }
   ]);
   // });
@@ -117,4 +107,4 @@ const lineMessageAPI = (req, res) => {
   };
 };
 
-module.exports = { findXYZ, findBC, connectGoogleAPI };
+module.exports = { findXYZ, findBC, connectGoogleAPI, lineMessageAPI };
