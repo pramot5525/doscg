@@ -96,16 +96,13 @@ const findBC = (req, res) => {
 const connectGoogleAPI = async (req, res) => {
   // return cache
   //   .get("connectGoogleAPI", async () => {
-  console.log(process.env.GOOGLE_API);
-  res.json({ test: "124", env: process.env.GOOGLE_API });
-  return;
+
   const googleAPIKey = process.env.GOOGLE_API;
   const scg = "13.80615,100.5353643";
   const central = "13.746787,100.5372003";
   const resMap = await axios.get(
     `https://maps.googleapis.com/maps/api/directions/json?origin=${scg}&destination=${central}&alternatives=true&key=${googleAPIKey}`
   );
-  // console.log(resMap.data);
   res.json(resMap.data);
   // })
   // .then(result => {
