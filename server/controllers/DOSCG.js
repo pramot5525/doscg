@@ -88,23 +88,22 @@ const connectGoogleAPI = async (req, res) => {
   res.json(resMap.data);
 };
 
-const reply = (messages, token) => {
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${config.channelAccessToken}`
-  };
-
-  const data = { replyToken: token, messages };
-
-  axios({
-    url: "https://api.line.me/v2/bot/message/reply",
-    method: "POST",
-    headers,
-    data
-  });
-};
-
 const lineMessageAPI = async (req, res) => {
+  const reply = (messages, token) => {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${config.channelAccessToken}`
+    };
+
+    const data = { replyToken: token, messages };
+
+    axios({
+      url: "https://api.line.me/v2/bot/message/reply",
+      method: "POST",
+      headers,
+      data
+    });
+  };
   const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
     channelSecret: process.env.CHANNEL_SECRET
@@ -129,22 +128,6 @@ const lineMessageAPI = async (req, res) => {
     setTimeout(() => reply(replyMessages, replyToken), 10000);
   }
   res.sendStatus(200);
-
-  function reply(messages, token) {
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${config.channelAccessToken}`
-    };
-
-    const data = { replyToken: token, messages };
-
-    axios({
-      url: "https://api.line.me/v2/bot/message/reply",
-      method: "POST",
-      headers,
-      data
-    });
-  }
 };
 
 module.exports = { findXYZ, findBC, connectGoogleAPI, lineMessageAPI };
