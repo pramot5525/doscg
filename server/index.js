@@ -2,7 +2,7 @@ const express = require("express");
 const consola = require("consola");
 const { Nuxt, Builder } = require("nuxt");
 const app = express();
-console.log("init express", process.env.GOOGLE_API);
+
 // Import and Set Nuxt.js options
 const config = require("../nuxt.config.js");
 config.dev = process.env.NODE_ENV !== "production";
@@ -26,7 +26,7 @@ async function start() {
   app.get("/api/xyz", doSCGController.findXYZ);
   app.get("/api/findBC", doSCGController.findBC);
   app.get("/api/googleAPI", doSCGController.connectGoogleAPI);
-  app.get("/api/line", doSCGController.lineMessageAPI);
+  app.post("/api/line", doSCGController.lineMessageAPI);
 
   // Give nuxt middleware to express
   app.use(nuxt.render);
