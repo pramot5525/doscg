@@ -1,3 +1,1 @@
-web: npm build && npm start
-
-
+web: nuxt start
