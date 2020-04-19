@@ -89,6 +89,9 @@ const connectGoogleAPI = async (req, res) => {
 };
 
 const lineMessageAPI = async (req, res) => {
+  // res.send(req);
+  // res.sendStatus(200);
+  // return;
   const reply = (messages, token) => {
     const headers = {
       "Content-Type": "application/json",
