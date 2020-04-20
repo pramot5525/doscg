@@ -160,8 +160,8 @@ const lineMessageAPI = async (req, res) => {
           const { subscription } = data;
 
           const payload = JSON.stringify({
-            title: "Line bot can't answer",
-            message: message.text
+            title: "Line bot can't answer"
+            // message: message.text
           });
 
           webPush
