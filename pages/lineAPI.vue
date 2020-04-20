@@ -15,6 +15,10 @@
     .row.mt-3
       .col-12
         label server/controllers/DOSCG.js
+      .col-12
+
+        .alert.alert-danger **** not done
+        b-button(type="button" @click="triggerPush") show noti
 
 
 
@@ -26,6 +30,51 @@ export default {
     return {
       ans: null
     };
+  },
+
+  methods: {
+    urlBase64ToUint8Array(base64String) {
+      const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding)
+        .replace(/-/g, "+")
+        .replace(/_/g, "/");
+
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    },
+
+    async triggerPushNotification() {
+      const publicVapidKey =
+        "BOjcXS9MFm1Lg6IXZO0blgkPQ0xunhn69i0CQmnNLwo24YPL47V94QGUdFF1QKUJRBawt8AqNhM1_PjGEkoHQyg";
+      if ("serviceWorker" in navigator) {
+        const register = await navigator.serviceWorker.register("/sw.js", {
+          scope: "/"
+        });
+
+        const subscription = await register.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: this.urlBase64ToUint8Array(publicVapidKey)
+        });
+
+        await fetch("/api/subscribe", {
+          method: "POST",
+          body: JSON.stringify(subscription),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+      } else {
+        console.error("Service workers are not supported in this browser");
+      }
+    },
+    triggerPush() {
+      this.triggerPushNotification().catch(error => console.error(error));
+    }
   }
 };
 </script>
