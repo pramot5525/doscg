@@ -41,7 +41,6 @@ async function start() {
   app.get("/api/googleAPI", doSCGController.connectGoogleAPI);
   app.post("/api/line", doSCGController.lineMessageAPI);
   app.post("/api/saveDevice", doSCGController.creteDeviceSubscribe);
-  app.get("/api/getDevices", doSCGController.getDevices);
 
   // Give nuxt middleware to express
   app.use(nuxt.render);

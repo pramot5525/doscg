@@ -198,19 +198,10 @@ const creteDeviceSubscribe = async (req, res) => {
   }
 };
 
-const getDevices = async (req, res) => {
-  let device = await DeviceSubscribe.find({});
-  if (device) {
-    return res.json(device);
-  }
-  res.json([]);
-};
-
 module.exports = {
   findXYZ,
   findBC,
   connectGoogleAPI,
   lineMessageAPI,
-  creteDeviceSubscribe,
-  getDevices
+  creteDeviceSubscribe
 };
