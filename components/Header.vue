@@ -1,5 +1,9 @@
 <template lang="pug">
-  b-navbar(type="dark" variant="dark")
+  b-navbar(
+    type="dark"
+    variant="dark"
+    sticky=true
+    )
     .container
       ul.nav
         li.nav-item

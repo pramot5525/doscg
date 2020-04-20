@@ -173,7 +173,6 @@ const lineMessageAPI = async (req, res) => {
         });
       }, 10000);
     }
-    res.json([]);
   }
   res.sendStatus(200);
 };
