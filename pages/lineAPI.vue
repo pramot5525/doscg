@@ -5,6 +5,8 @@
         b-card
          b-card-text Please create a small project using Line messaging API for getting a notification when your Line Bot can not answer a question to the customer more than 10 second
         b-card.mt-3
+          b-card-text Please allow notification permission
+          b-card-text then add Line Bot
           b-card-text LINE Bot ID: @442fzklh
           img.qrcode(src="/img/442fzklh.png")
           p say: Hello
@@ -15,10 +17,8 @@
     .row.mt-3
       .col-12
         label server/controllers/DOSCG.js
-      .col-12
 
-        .alert.alert-danger **** not done
-        b-button(type="button" @click="triggerPush") show noti
+
 
 
 
@@ -33,7 +33,7 @@ export default {
   },
 
   mounted() {
-    this.triggerPushNotification();
+    this.requiredAndSaveNotification();
   },
 
   methods: {
@@ -52,7 +52,7 @@ export default {
       return outputArray;
     },
 
-    async triggerPushNotification() {
+    async requiredAndSaveNotification() {
       const publicVapidKey =
         "BOjcXS9MFm1Lg6IXZO0blgkPQ0xunhn69i0CQmnNLwo24YPL47V94QGUdFF1QKUJRBawt8AqNhM1_PjGEkoHQyg";
       if ("serviceWorker" in navigator) {
@@ -66,28 +66,13 @@ export default {
         });
 
         // save endpoit to databse mongo
-        await this.$axios
-          .$post("/api/saveDevice", {
-            subscription,
-            endpoint: subscription.endpoint
-          })
-          .then(res => {
-            console.log(res);
-          });
-
-        // await fetch("/api/subscribe", {
-        //   method: "POST",
-        //   body: JSON.stringify(subscription),
-        //   headers: {
-        //     "Content-Type": "application/json"
-        //   }
-        // });
+        await this.$axios.$post("/api/saveDevice", {
+          subscription,
+          endpoint: subscription.endpoint
+        });
       } else {
         console.error("Service workers are not supported in this browser");
       }
-    },
-    triggerPush() {
-      this.triggerPushNotification().catch(error => console.error(error));
     }
   }
 };

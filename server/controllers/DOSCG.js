@@ -141,10 +141,6 @@ const lineMessageAPI = async (req, res) => {
       {
         type: "text",
         text: "Hello"
-      },
-      {
-        type: "text",
-        text: "Ok"
       }
     ];
     reply(replyMessages, replyToken);
@@ -156,10 +152,11 @@ const lineMessageAPI = async (req, res) => {
       }
     ];
     reply(replyMessages, replyToken);
-    setTimeout(async () => {
-      let device = await DeviceSubscribe.find({});
-      if (device) {
-        // return res.json(device);
+
+    let device = await DeviceSubscribe.find({});
+    if (device) {
+      // return res.json(device);
+      setTimeout(() => {
         device.forEach(data => {
           const { subscription } = data;
 
@@ -167,16 +164,16 @@ const lineMessageAPI = async (req, res) => {
 
           const payload = JSON.stringify({
             title: "Line bot can't answer",
-            message: "user message"
+            message: message.text
           });
 
           webPush
             .sendNotification(subscription, payload)
             .catch(error => console.error(error));
         });
-      }
-      res.json([]);
-    }, 10000);
+      }, 10000);
+    }
+    res.json([]);
   }
   res.sendStatus(200);
 };

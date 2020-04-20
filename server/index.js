@@ -5,7 +5,6 @@ const app = express();
 
 require("dotenv").config();
 
-const webPush = require("web-push");
 const bodyParser = require("body-parser");
 const path = require("path");
 const connectDB = require("./config/db");
@@ -36,29 +35,6 @@ async function start() {
   app.use(bodyParser.json());
 
   app.use(express.static(path.join(__dirname, "client")));
-
-  const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
-  const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
-  webPush.setVapidDetails(
-    "mailto:test@example.com",
-    publicVapidKey,
-    privateVapidKey
-  );
-
-  app.post("/api/subscribe", (req, res) => {
-    const subscription = req.body;
-
-    res.status(201).json({});
-
-    const payload = JSON.stringify({
-      title: "Line bot can't answer",
-      message: "user message"
-    });
-
-    webPush
-      .sendNotification(subscription, payload)
-      .catch(error => console.error(error));
-  });
 
   app.get("/api/xyz", doSCGController.findXYZ);
   app.get("/api/findBC", doSCGController.findBC);
