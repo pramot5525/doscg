@@ -155,12 +155,9 @@ const lineMessageAPI = async (req, res) => {
 
     let device = await DeviceSubscribe.find({});
     if (device) {
-      // return res.json(device);
       setTimeout(() => {
         device.forEach(data => {
           const { subscription } = data;
-
-          res.status(201).json({});
 
           const payload = JSON.stringify({
             title: "Line bot can't answer",
