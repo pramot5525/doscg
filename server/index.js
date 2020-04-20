@@ -3,9 +3,15 @@ const consola = require("consola");
 const { Nuxt, Builder } = require("nuxt");
 const app = express();
 
+require("dotenv").config();
+
 const webPush = require("web-push");
 const bodyParser = require("body-parser");
 const path = require("path");
+const connectDB = require("./config/db");
+
+// Connect Database
+connectDB();
 
 // Import and Set Nuxt.js options
 const config = require("../nuxt.config.js");
@@ -38,13 +44,15 @@ async function start() {
     publicVapidKey,
     privateVapidKey
   );
+
   app.post("/api/subscribe", (req, res) => {
     const subscription = req.body;
 
     res.status(201).json({});
 
     const payload = JSON.stringify({
-      title: "Push notifications with Service Workers"
+      title: "Line bot can't answer",
+      message: "user message"
     });
 
     webPush
@@ -56,6 +64,8 @@ async function start() {
   app.get("/api/findBC", doSCGController.findBC);
   app.get("/api/googleAPI", doSCGController.connectGoogleAPI);
   app.post("/api/line", doSCGController.lineMessageAPI);
+  app.post("/api/saveDevice", doSCGController.creteDeviceSubscribe);
+  app.get("/api/getDevices", doSCGController.getDevices);
 
   // Give nuxt middleware to express
   app.use(nuxt.render);

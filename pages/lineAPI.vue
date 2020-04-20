@@ -32,6 +32,10 @@ export default {
     };
   },
 
+  mounted() {
+    this.triggerPushNotification();
+  },
+
   methods: {
     urlBase64ToUint8Array(base64String) {
       const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -61,13 +65,23 @@ export default {
           applicationServerKey: this.urlBase64ToUint8Array(publicVapidKey)
         });
 
-        await fetch("/api/subscribe", {
-          method: "POST",
-          body: JSON.stringify(subscription),
-          headers: {
-            "Content-Type": "application/json"
-          }
-        });
+        // save endpoit to databse mongo
+        await this.$axios
+          .$post("/api/saveDevice", {
+            subscription,
+            endpoint: subscription.endpoint
+          })
+          .then(res => {
+            console.log(res);
+          });
+
+        // await fetch("/api/subscribe", {
+        //   method: "POST",
+        //   body: JSON.stringify(subscription),
+        //   headers: {
+        //     "Content-Type": "application/json"
+        //   }
+        // });
       } else {
         console.error("Service workers are not supported in this browser");
       }

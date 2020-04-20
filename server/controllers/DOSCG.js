@@ -2,6 +2,9 @@ const axios = require("axios");
 const NodeCache = require("node-cache");
 const myCache = new NodeCache();
 
+const DeviceSubscribe = require("../models/DeviceSubscribe");
+const webPush = require("web-push");
+
 // X, Y, 5, 9, 15, 23, Z - Please create a new function for finding X, Y, Z value
 const findXYZ = (req, res) => {
   const arr = ["X", "Y", 5, 9, 15, 23, "Z"];
@@ -110,6 +113,7 @@ const connectGoogleAPI = async (req, res) => {
   res.json(resMap.data);
 };
 
+// function call from line webhook
 const lineMessageAPI = async (req, res) => {
   const reply = (messages, token) => {
     const headers = {
@@ -137,6 +141,10 @@ const lineMessageAPI = async (req, res) => {
       {
         type: "text",
         text: "Hello"
+      },
+      {
+        type: "text",
+        text: "Ok"
       }
     ];
     reply(replyMessages, replyToken);
@@ -144,12 +152,68 @@ const lineMessageAPI = async (req, res) => {
     const replyMessages = [
       {
         type: "text",
-        text: "Delay 10s for send noti"
+        text: "Notification will show on web after 10 sec"
       }
     ];
-    setTimeout(() => reply(replyMessages, replyToken), 10000);
+    reply(replyMessages, replyToken);
+    setTimeout(async () => {
+      let device = await DeviceSubscribe.find({});
+      if (device) {
+        // return res.json(device);
+        device.forEach(data => {
+          const { subscription } = data;
+
+          res.status(201).json({});
+
+          const payload = JSON.stringify({
+            title: "Line bot can't answer",
+            message: "user message"
+          });
+
+          webPush
+            .sendNotification(subscription, payload)
+            .catch(error => console.error(error));
+        });
+      }
+      res.json([]);
+    }, 10000);
   }
   res.sendStatus(200);
 };
 
-module.exports = { findXYZ, findBC, connectGoogleAPI, lineMessageAPI };
+const creteDeviceSubscribe = async (req, res) => {
+  const { subscription, endpoint } = req.body;
+  try {
+    let device = await DeviceSubscribe.findOne({ endpoint });
+    if (device) {
+      return res.status(200);
+    }
+    device = new DeviceSubscribe({
+      subscription,
+      endpoint
+    });
+
+    await device.save();
+    return res.status(200);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+};
+
+const getDevices = async (req, res) => {
+  let device = await DeviceSubscribe.find({});
+  if (device) {
+    return res.json(device);
+  }
+  res.json([]);
+};
+
+module.exports = {
+  findXYZ,
+  findBC,
+  connectGoogleAPI,
+  lineMessageAPI,
+  creteDeviceSubscribe,
+  getDevices
+};
