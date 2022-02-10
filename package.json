@@ -27,7 +27,7 @@
     "web-push": "^3.4.3"
   },
   "devDependencies": {
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "nodemon": "^1.18.9",
     "pug": "^2.0.4",
     "pug-loader": "^2.4.0",
